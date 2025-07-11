@@ -124,6 +124,7 @@ Response:
 ⸻
 
 📌 Future Enhancements:
+
 • ✅ Add user authentication (JWT/OTP)
 • 📅 Appointment scheduling with available doctors
 • 📃 Medical history tracking for patients
