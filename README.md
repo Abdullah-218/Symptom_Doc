@@ -112,22 +112,23 @@ Response:
 ```
 
 🧠 How It Works
-	1.	User submits symptoms via API or frontend.
-	2.	Gemini AI processes the prompt and returns:
-	•	Medical specialization
-	•	Confidence level
-	•	Reasoning
-	3.	Supabase is queried for doctors with matching specialization.
-	4.	JSON response returned to the client.
+
+1. User submits symptoms via API or frontend.
+2. Gemini AI processes the prompt and returns:
+      •	Medical specialization
+      •	Confidence level
+      •	Reasoning
+3. Supabase is queried for doctors with matching specialization.
+4. JSON response returned to the client.
 
 ⸻
 
-📌 Future Enhancements
-	•	✅ Add user authentication (JWT/OTP)
-	•	📅 Appointment scheduling with available doctors
-	•	📃 Medical history tracking for patients
-	•	🤖 AI-powered treatment suggestions
-	•	🩻 Symptom-image analysis (skin rashes, X-rays)
+📌 Future Enhancements:
+• ✅ Add user authentication (JWT/OTP)
+• 📅 Appointment scheduling with available doctors
+• 📃 Medical history tracking for patients
+• 🤖 AI-powered treatment suggestions
+• 🩻 Symptom-image analysis (skin rashes, X-rays)
 
  ____
 
