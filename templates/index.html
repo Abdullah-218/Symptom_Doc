@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">Symptom Analyzer</h1>
+        
+        <form id="symptomForm" class="space-y-4">
+            <textarea 
+                id="symptomsInput" 
+                rows="4" 
+                class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                placeholder="Describe your symptoms in detail..."
+                required
+            ></textarea>
+            
+            <button 
+                type="submit" 
+                class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-300"
+            >
+                Analyze Symptoms
+            </button>
+        </form>
+
+        <div id="resultContainer" class="mt-6 hidden">
+            <h2 class="text-xl font-semibold mb-4">Analysis Results</h2>
+            <div id="analysisDetails" class="bg-gray-50 p-4 rounded"></div>
+            <div id="doctorsList" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('symptomForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const symptomsInput = document.getElementById('symptomsInput');
+            const resultContainer = document.getElementById('resultContainer');
+            const analysisDetails = document.getElementById('analysisDetails');
+            const doctorsList = document.getElementById('doctorsList');
+
+            // Reset previous results
+            resultContainer.classList.add('hidden');
+            analysisDetails.innerHTML = '';
+            doctorsList.innerHTML = '';
+
+            try {
+                const response = await fetch('/analyze-symptoms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ symptoms: symptomsInput.value })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Display analysis details
+                    analysisDetails.innerHTML = `
+                        <p><strong>Specialization:</strong> ${data.analysis.specialization}</p>
+                        <p><strong>Confidence:</strong> ${data.analysis.confidence}</p>
+                        <p><strong>Reasoning:</strong> ${data.analysis.reasoning}</p>
+                    `;
+
+                    // Display recommended doctors
+                    if (data.doctors.length > 0) {
+                        const doctorHTML = data.doctors.map(doctor => `
+                            <div class="bg-white p-3 rounded shadow mb-2">
+                                <p><strong>Name:</strong> ${doctor.name}</p>
+                                <p><strong>Qualification:</strong> ${doctor.qualification}</p>
+                                <p><strong>Specialization:</strong> ${doctor.specialization}</p>
+                                <p><strong>Experience:</strong> ${doctor.experience} years</p>
+                                <p><strong>Rating:</strong> ${doctor.rating}</p>
+                                <button 
+                                    onclick='bookAppointment(${JSON.stringify(doctor)})'
+                                    class="mt-2 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition duration-300"
+                                >
+                                    Book Appointment
+                                </button>
+                            </div>
+                        `).join('');
+
+                        doctorsList.innerHTML = `
+                            <h3 class="text-lg font-semibold mb-2">Recommended Doctors</h3>
+                            ${doctorHTML}
+                        `;
+                    } else {
+                        doctorsList.innerHTML = '<p>No doctors found in this specialization.</p>';
+                    }
+
+                    // Show results
+                    resultContainer.classList.remove('hidden');
+                } else {
+                    alert(data.message || 'An error occurred');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred');
+            }
+        });
+
+        // Function to handle appointment booking
+        function bookAppointment(doctor) {
+            // This is where you'll implement the navigation to your appointment booking screen
+            // The doctor object contains all the doctor's details
+            console.log('Booking appointment for:', doctor);
+            
+            // Example of how you might navigate in a mobile app or web app
+            // This is just a placeholder - you'll replace this with your actual navigation method
+            window.postMessage(JSON.stringify({
+                type: 'BOOK_APPOINTMENT',
+                doctor: doctor
+            }), '*');
+        }
+    </script>
+</body>
+</html>
