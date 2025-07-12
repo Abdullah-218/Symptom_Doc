@@ -82,7 +82,9 @@ python app.py
 
 🧪 API Endpoint
 
+```
 POST /analyze-symptoms
+```
 
 Request Body:
 ```
